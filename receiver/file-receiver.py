@@ -47,18 +47,22 @@ def main():
             # Desfazer tupla
             try:
                 num_seq, chunk, checksum = struct.unpack("!I1000sI", data)
+
+                chunk = chunk.rstrip(b'\x00')
+                chunk = chunk.lstrip(b'\x00')
+                chunk_as_string = chunk.decode('utf-8')
             except Exception as e:
                 print(f"Aconteceu uma escessao: {e}")
                 continue
             
-            if chunk == "eof":
+            if chunk_as_string[:3] == "eof":
                 print("Entrei aqui")
                 # Ordenar o set
                 received_pkts_ordenados = sorted(received_pkts, key=lambda x: x.seq_num)
 
                 # Escrever no ficheiro
                 for packet in received_pkts_ordenados:
-                    print(packet.seq_num)
+                    file.write(packet.data)
                 break
 
             if base is None:
