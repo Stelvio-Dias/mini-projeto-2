@@ -84,11 +84,8 @@ def main():
             # receiver.sendto(ack_pkt, authorized_sender)
 
 
-
-
     receiver.close()
-
-    
+   
 
 ## ----------------------------------------------------------------------------------
 
