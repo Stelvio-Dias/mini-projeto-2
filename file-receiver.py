@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import socket
 import sys
 import struct
@@ -10,13 +13,13 @@ def main():
 
     receiver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        if len(sys.argv) != 4:
+        if len(sys.argv) != 3:
             print("Uso: python file-sender.py <arquivo> <porta> <tamanho_da_janela>")
             sys.exit(-1)
 
-        file_path = sys.argv[1]
-        receiver_port = int(sys.argv[2])
-        window_size = int(sys.argv[3])
+        file_path = sys.argv[0]
+        receiver_port = int(sys.argv[1])
+        window_size = int(sys.argv[2])
         
 
         if window_size <= 0 or window_size > 32:
@@ -31,7 +34,7 @@ def main():
         receiver.bind(("localhost", receiver_port))
         print('Iniciado...')
     except Exception as e:
-        print('\nNão foi possível iniciar! Status = -1\n', e)
+        print('\nNão foi possível iniciar! Status = -1\n')
         return
     authorized_sender = None
 
@@ -59,7 +62,7 @@ def main():
                 chunk = chunk.lstrip(b'\x00')
                 chunk_as_string = chunk.decode('utf-8')
             except Exception as e:
-                print(f"Aconteceu uma escessao: {e}")
+                print("Aconteceu uma excessao: ")
                 continue
             
             if chunk_as_string[:3] == "eof":

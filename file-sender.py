@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import socket
 import sys
 import os
 from DataPacket import DataPacket
 import struct
-import time
 
 # Configurações
 PACKET_SIZE = 1000
@@ -27,7 +29,7 @@ def file_sender(filename, server_ip, server_port, window_size):
         # Divide o arquivo em pedaços
         chunks = [file_data[i:i+PACKET_SIZE] for i in range(0, len(file_data), PACKET_SIZE)]
         total_chunks = len(chunks)
-        print(f"Pedaços {total_chunks}")
+        #print(f"Pedaços {total_chunks}")
 
         if (len(chunks[total_chunks - 1]) == PACKET_SIZE):
             chunks.append(b'')
@@ -50,7 +52,7 @@ def file_sender(filename, server_ip, server_port, window_size):
                 ##
                 packet = DataPacket(next_seq_num, chunks[next_seq_num - 1], checksum)
                 sock.sendto(packet.to_bytes(), (server_ip, int(server_port)))
-                print(f"Enviado pacote {next_seq_num}")
+                print("Enviado pacote ", next_seq_num)
                 next_seq_num += 1
 
                 if (next_seq_num == len(chunks)):
@@ -68,7 +70,7 @@ def file_sender(filename, server_ip, server_port, window_size):
 
                     ack_seq, selective_acks = struct.unpack("II", ack_data)
                     
-                    print(f"Recebido ACK {selective_acks}")
+                    print("Recebido ACK ", selective_acks)
 
                     # Atualiza pacotes confirmados
                     if ack_seq >= base:
@@ -84,7 +86,7 @@ def file_sender(filename, server_ip, server_port, window_size):
                         print("Timeout! Reenviando pacotes pendentes...")
                         packet = DataPacket(seq_num, chunks[seq_num - 1], calculate_simple_checksum(chunks[seq_num - 1]))
                         sock.sendto(packet.to_bytes(), (server_ip, int(server_port)))
-                        print(f"Reenviado pacote {seq_num}")
+                        print("Reenviado pacote ", seq_num)
 
                 if timeouts >= 3:   # Duvida de 3 ou 5, caso for para segundos ou tempo do timer
                     print("Erro: Muitos timeouts. Encerrando envio.")
@@ -94,7 +96,7 @@ def file_sender(filename, server_ip, server_port, window_size):
         sys.exit(0)
 
     except Exception as e:
-        print(f"Erro inesperado: {e}")
+        print(e)
         sys.exit(-1)
 
 def calculate_simple_checksum(data):

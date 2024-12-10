@@ -1,4 +1,5 @@
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 class ReceivedPacket:
     def __init__(self, seq_num, data):
