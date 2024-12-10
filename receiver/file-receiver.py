@@ -1,8 +1,6 @@
-import json
 import socket
 import sys
 import struct
-import os
 from ReceivedPacket import ReceivedPacket
 
 def main():
@@ -12,9 +10,18 @@ def main():
 
     receiver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
+        if len(sys.argv) != 4:
+            print("Uso: python file-sender.py <arquivo> <porta> <tamanho_da_janela>")
+            sys.exit(-1)
+
         file_path = sys.argv[1]
         receiver_port = int(sys.argv[2])
         window_size = int(sys.argv[3])
+        
+
+        if window_size <= 0 or window_size > 32:
+            print("ERRO! Tamanho da janela deve estar entre 1 e 32, saindo...")
+            sys.exit(-1)
     except IndexError:
         print("Erro na leitura de parametros. Status = -1")
         return
