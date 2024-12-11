@@ -13,13 +13,13 @@ def main():
 
     receiver = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        if len(sys.argv) != 3:
+        if len(sys.argv) != 4:
             print("Uso: python file-sender.py <arquivo> <porta> <tamanho_da_janela>")
             sys.exit(-1)
 
-        file_path = sys.argv[0]
-        receiver_port = int(sys.argv[1])
-        window_size = int(sys.argv[2])
+        file_path = sys.argv[1]
+        receiver_port = int(sys.argv[2])
+        window_size = int(sys.argv[3])
         
 
         if window_size <= 0 or window_size > 32:
